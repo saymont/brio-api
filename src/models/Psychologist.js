@@ -7,7 +7,7 @@ const Psychologist = db.define('psychologists', {
         type: Sequelize.UUID,
         unique: true,
         primaryKey: true,
-        defaultValue: Sequelize.literal('gen_random_uuid()')
+        defaultValue: Sequelize.literal('gen_random_uuid()'),
     },
     administrator: {
         type: Sequelize.BOOLEAN,
@@ -28,6 +28,5 @@ const Psychologist = db.define('psychologists', {
         type: Sequelize.STRING
     }
 });
-
 
 module.exports = Psychologist;

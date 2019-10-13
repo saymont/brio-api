@@ -89,6 +89,7 @@ module.exports = {
     },
 }
 
+
 function generateToken(id) {
     return jwt.sign({ id }, "secret", {
         expiresIn: 86400

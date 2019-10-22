@@ -1,13 +1,13 @@
-const { Model, DataTypes } = require('sequelize');
+const { Model, DataTypes, literal } = require('sequelize');
 
 class User extends Model {
-    static IntersectionObserver(sequelize) {
-        super.intit({
+    static init(sequelize) {
+        super.init({
             user_id: {
                 type: DataTypes.UUID,
                 unique: true,
                 primaryKey: true,
-                defaultValue: DataTypes.literal('gen_random_uuid()')
+                defaultValue: literal('gen_random_uuid()')
             },
             administrator: {
                 type: DataTypes.BOOLEAN,

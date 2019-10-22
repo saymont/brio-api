@@ -1,4 +1,4 @@
-const { Model, DataTypes } = require('sequelize');
+const { Model, DataTypes, literal } = require('sequelize');
 
 class Psychologist extends Model {
     static init(sequelize) {
@@ -7,7 +7,7 @@ class Psychologist extends Model {
                 type: DataTypes.UUID,
                 unique: true,
                 primaryKey: true,
-                defaultValue: DataTypes.literal('gen_random_uuid()'),
+                defaultValue: literal('gen_random_uuid()'),
             },
             administrator: {
                 type: DataTypes.BOOLEAN,

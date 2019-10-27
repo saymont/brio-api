@@ -28,6 +28,10 @@ class User extends Model {
             sequelize
         })
     }
+
+    static associate(models) {
+        this.hasOne(models.Psychologist, { foreingKey: 'user_id', as: 'psychologist' })
+    }
 }
 
 module.exports = User;

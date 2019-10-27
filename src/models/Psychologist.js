@@ -31,6 +31,11 @@ class Psychologist extends Model {
             sequelize
         })
     }
+
+    static associate(models) {
+        this.belongsTo(models.User, { foreingKey: 'user_id', as: 'user' })
+    }
+
 }
 
 module.exports = Psychologist;

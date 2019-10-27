@@ -12,6 +12,7 @@ module.exports = {
 
             const user = await User.findOne({
                 where: { email },
+                include: { association: 'psychologist' },
             });
 
             if (!user) {

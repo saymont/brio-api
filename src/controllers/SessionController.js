@@ -2,8 +2,6 @@ const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 
 const User = require('../models/User');
-const Psychologist = require('../models/Psychologist');
-
 
 module.exports = {
     async login(req, res) {
@@ -30,7 +28,7 @@ module.exports = {
                 }
             });
         } catch (err) {
-            return res.status(400).json({ error: "Login failed" });
+            return res.status(400).json({ error: err + "Login failed" });
         }
     },
 
@@ -61,33 +59,6 @@ module.exports = {
 
     },
 
-    async registerPsychologist(req, res) {
-        const { name, email, password, cpf, crp } = req.body;
-
-        try {
-            if (await Psychologist.findOne({
-                where: { email },
-            })) {
-                return res.status(400).json({ error: 'E-mail already registered' })
-            }
-
-            const hash = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-
-            const psychologist = await Psychologist.create({
-                name,
-                email,
-                cpf,
-                crp,
-                administrator: false,
-                password: hash
-            });
-
-            return res.json({ psychologist });
-
-        } catch (err) {
-            return res.status(400).json({ error: "Psychologist registration failed" });
-        }
-    },
 }
 
 

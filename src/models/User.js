@@ -29,9 +29,9 @@ class User extends Model {
         })
     }
 
-    // static associate(models) {
-    //     this.hasOne(models.Psychologist, { foreingKey: 'user_id', as: 'psychologist' })
-    // }
+    static associate(models) {
+        this.hasOne(models.Psychologist, { foreingKey: 'user_id', as: 'psychologist' })
+    }
 }
 
 module.exports = User;

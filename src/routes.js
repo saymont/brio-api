@@ -7,12 +7,11 @@ const routes = express.Router();
 const SessionController = require('./controllers/SessionController');
 const DashboardController = require('./controllers/DashboardController');
 
-routes.post('/login', SessionController.login);
-routes.post('/register', SessionController.registerUser);
-routes.post('/register/psychologist', SessionController.registerPsychologist); 
+routes.post('/api/v1/login', SessionController.login);
+routes.post('/api/v1/register', SessionController.registerUser);
+routes.post('/api/v1/register/psychologist', SessionController.registerPsychologist); 
 
-routes.use(authMiddleware);
-
-routes.get('/dashboard', DashboardController.show);
+// Rota apenas para testar o auth
+routes.get('/api/v1/dashboard', authMiddleware, DashboardController.show);
 
 module.exports = routes;

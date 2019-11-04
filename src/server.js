@@ -1,14 +1,9 @@
 require('dotenv/config');
 const express = require("express");
 
-const db = require('./services/database');
-
 const routes = require('./routes');
 
-
-db.authenticate()
-    .then(() => console.log('Database connected...'))
-    .catch(err => console.log('Erro: ' + err))
+require('./database');
 
 // Inicia o app
 const app = express();

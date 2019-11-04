@@ -1,29 +1,37 @@
-const Sequelize = require('sequelize');
+const { Model, DataTypes, literal } = require('sequelize');
 
-const db = require('../services/database');
-
-const User = db.define('users', {
-    user_id: {
-        type: Sequelize.UUID,
-        unique: true,
-        primaryKey: true,
-        defaultValue: Sequelize.literal('gen_random_uuid()')
-    },
-    administrator: {
-        type: Sequelize.BOOLEAN,
-    },
-    name: {
-        type: Sequelize.STRING,
-    },
-    email: {
-        type: Sequelize.STRING,
-    },
-    password: {
-        type: Sequelize.STRING
-    },
-    cpf: {
-        type: Sequelize.STRING
+class User extends Model {
+    static init(sequelize) {
+        super.init({
+            user_id: {
+                type: DataTypes.UUID,
+                unique: true,
+                primaryKey: true,
+                defaultValue: literal('gen_random_uuid()')
+            },
+            administrator: {
+                type: DataTypes.BOOLEAN,
+            },
+            name: {
+                type: DataTypes.STRING,
+            },
+            email: {
+                type: DataTypes.STRING,
+            },
+            password: {
+                type: DataTypes.STRING
+            },
+            cpf: {
+                type: DataTypes.STRING
+            }
+        }, {
+            sequelize
+        })
     }
-});
+
+    static associate(models) {
+        this.hasOne(models.Psychologist, { as: 'psychologist', foreignKey: 'user_id' })
+    }
+}
 
 module.exports = User;

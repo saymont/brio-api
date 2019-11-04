@@ -1,32 +1,25 @@
-const Sequelize = require('sequelize');
+const { Model, DataTypes, literal } = require('sequelize');
 
-const db = require('../services/database');
-
-const Psychologist = db.define('psychologists', {
-    user_id: {
-        type: Sequelize.UUID,
-        unique: true,
-        primaryKey: true,
-        defaultValue: Sequelize.literal('gen_random_uuid()'),
-    },
-    administrator: {
-        type: Sequelize.BOOLEAN,
-    },
-    name: {
-        type: Sequelize.STRING,
-    },
-    email: {
-        type: Sequelize.STRING,
-    },
-    password: {
-        type: Sequelize.STRING
-    },
-    cpf: {
-        type: Sequelize.STRING
-    },
-    crp: {
-        type: Sequelize.STRING
+class Psychologist extends Model {
+    static init(sequelize) {
+        super.init({
+            psychologist_id: {
+                type: DataTypes.UUID,
+                unique: true,
+                primaryKey: true,
+                defaultValue: literal('gen_random_uuid()'),
+            },
+            crp: {
+                type: DataTypes.STRING
+            },
+        }, {
+            sequelize
+        })
     }
-});
+
+    static associate(models) {
+        this.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
+    }
+}
 
 module.exports = Psychologist;

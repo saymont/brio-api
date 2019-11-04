@@ -12,5 +12,4 @@ Psychologist.init(connection);
 User.associate(connection.models);
 Psychologist.associate(connection.models);
 
-
 module.exports = connection;

@@ -2,20 +2,24 @@ const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 
 const User = require('../models/User');
+const Psychologist = require('../models/Psychologist');
 
 module.exports = {
     async login(req, res) {
         try {
             const { email, password } = req.body;
 
-            const user = await User.findOne({
+            let user = await User.findOne({
                 where: { email },
-                include: { association: 'psychologist' },
-            });
+            })
 
             if (!user) {
                 return res.status(400).json({ error: 'User does not exists' })
             }
+
+            user = await User.findByPk(user.user_id, {
+                include: { association: "psychologist" }
+            });
 
             bcrypt.compare(password, user.password, function (err, response) {
                 if (response == true) {

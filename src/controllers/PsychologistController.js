@@ -22,7 +22,7 @@ module.exports = {
             return res.json({ psychologist });
 
         } catch (err) {
-            return res.status(400).json({ error: err+"Psychologist registration failed" });
+            return res.status(400).json({ error: "Psychologist registration failed" });
         }
 
     },

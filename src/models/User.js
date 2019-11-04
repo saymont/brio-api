@@ -30,7 +30,7 @@ class User extends Model {
     }
 
     static associate(models) {
-        this.hasOne(models.Psychologist, { foreingKey: 'user_id', as: 'psychologist' })
+        this.hasOne(models.Psychologist, { as: 'psychologist', foreignKey: 'user_id' })
     }
 }
 

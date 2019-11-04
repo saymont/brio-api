@@ -12,9 +12,9 @@ class Psychologist extends Model {
             crp: {
                 type: DataTypes.STRING
             },
-            // user_id: {
-            //     type: DataTypes.UUID
-            // },
+            user_id: {
+                type: DataTypes.UUID
+            },
 
         }, {
             sequelize
@@ -22,7 +22,7 @@ class Psychologist extends Model {
     }
 
     static associate(models) {
-        this.belongsTo(models.User, { foreingKey: 'user_id', as: 'user' });
+        this.belongsTo(models.User, { foreignKey: 'user_id', as: 'user' });
     }
 }
 

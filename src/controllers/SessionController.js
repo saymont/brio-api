@@ -9,22 +9,22 @@ module.exports = {
         try {
             const { email, password } = req.body;
 
-            let user = await User.findOne({
-                where: { email },
+            const user = await User.findOne({
+                where: { email }
             })
 
             if (!user) {
                 return res.status(400).json({ error: 'User does not exists' })
             }
 
-            user = await User.findByPk(user.user_id, {
-                include: { association: "psychologist" }
-            });
+            const psychologist = await Psychologist.findOne({
+                where: { user_id: user.user_id }
+            })
 
             bcrypt.compare(password, user.password, function (err, response) {
                 if (response == true) {
                     return res.json({
-                        user,
+                        user: { user, psychologist },
                         token: generateToken(user.user_id)
                     });
                 } else {
@@ -32,7 +32,7 @@ module.exports = {
                 }
             });
         } catch (err) {
-            return res.status(400).json({ error: err + "Login failed" });
+            return res.status(400).json({ error: "Login failed" });
         }
     },
 

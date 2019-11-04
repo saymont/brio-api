@@ -12,10 +12,6 @@ class Psychologist extends Model {
             crp: {
                 type: DataTypes.STRING
             },
-            user_id: {
-                type: DataTypes.UUID
-            },
-
         }, {
             sequelize
         })

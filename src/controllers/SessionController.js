@@ -1,5 +1,7 @@
 const bcrypt = require('bcrypt');
-const jwt = require("jsonwebtoken");
+const jwt = require('jsonwebtoken');
+
+const encryption = require('../util/EncryptionCTR');
 
 const User = require('../models/User');
 const Psychologist = require('../models/Psychologist');
@@ -48,20 +50,47 @@ module.exports = {
             }
 
             const hash = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-            const user = await User.create({
+
+            // generete Token
+            const confirmationToken = "TODO gerar um uuid"
+            // mandar o email com confirmationToken -codificado
+            const confirmationTokenParaEmail = encryption.encrypt(confirmationToken)
+
+            await User.create({
                 name,
                 email,
                 administrator: false,
                 cpf,
-                password: hash
+                password: hash,
+                confirmationToken,
+                active: false
+
             });
 
-            return res.json({ user });
+            return res.status(201);
+
         } catch (err) {
             return res.status(400).json({ error: "User registration failed" });
         }
 
     },
+
+    async confirmation(req, res) {
+        const { confirmationToken } = req.params;
+
+        try {
+            confirmationToken = encryption.decrypt(confirmationToken);
+
+            await User.update(
+                { active: true },
+                { where: confirmationToken },
+            )
+
+        } catch (err) {
+            return res.status(400).json({ error: "User confirmation failed" });
+        }
+
+    }
 
 }
 

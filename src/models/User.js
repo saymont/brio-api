@@ -12,6 +12,12 @@ class User extends Model {
             administrator: {
                 type: DataTypes.BOOLEAN,
             },
+            active: {
+                type: DataTypes.BOOLEAN,
+            },
+            confirmationToken: {
+                type: DataTypes.STRING,
+            },
             name: {
                 type: DataTypes.STRING,
             },

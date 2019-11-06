@@ -15,4 +15,6 @@ routes.post('/api/v1/:user_id/psychologist', PsychologistController.register);
 // Rota apenas para testar o auth
 routes.get('/api/v1/dashboard', authMiddleware, DashboardController.show);
 
+routes.get('/api/v1/confirmation/:confirmationToken', SessionController.confirmation);
+
 module.exports = routes;

@@ -9,7 +9,6 @@ module.exports = {
 
         try {
 
-
             const user = await User.findByPk(user_id, {
                 include: { association: "psychologist" }
             });

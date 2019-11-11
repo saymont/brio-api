@@ -15,9 +15,6 @@ class User extends Model {
             active: {
                 type: DataTypes.BOOLEAN,
             },
-            confirmationToken: {
-                type: DataTypes.STRING,
-            },
             name: {
                 type: DataTypes.STRING,
             },

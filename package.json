@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/saymont/brio-api#readme",
   "dependencies": {
+    "aws-sdk": "^2.593.0",
     "bcrypt": "^3.0.6",
     "cors": "^2.8.5",
     "dotenv": "^8.1.0",

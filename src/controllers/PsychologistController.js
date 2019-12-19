@@ -4,7 +4,7 @@ const UserSchema = require('../models/User');
 module.exports = {
     async confirmRegister(req, res) {
         const { admin_id } = req.params;
-        const { crp } = req.body;
+        const { user_id, crp } = req.body;
 
         try {
 

@@ -1,36 +1,34 @@
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 
-const User = require('../models/User');
-const Psychologist = require('../models/Psychologist');
+const UserSchema = require('../models/User');
+const encryption = require('../util/EncryptionCTR');
+
 
 module.exports = {
     async login(req, res) {
-        try {
-            const { email, password } = req.body;
 
-            const user = await User.findOne({
-                where: { email }
-            })
+        const { email, password } = req.body;
+
+        try {
+
+            const user = await UserSchema.findOne({ email });
 
             if (!user) {
                 return res.status(400).json({ error: 'User does not exists' })
             }
 
-            const psychologist = await Psychologist.findOne({
-                where: { user_id: user.user_id }
-            })
-
             bcrypt.compare(password, user.password, function (err, response) {
                 if (response == true) {
                     return res.json({
-                        user: { user, psychologist },
+                        user: user,
                         token: generateToken(user.user_id)
                     });
                 } else {
                     return res.status(400).json({ error: 'Incorrect password' })
                 }
             });
+
         } catch (err) {
             return res.status(400).json({ error: "Login failed" });
         }
@@ -41,27 +39,55 @@ module.exports = {
         const { name, email, password, cpf } = req.body;
 
         try {
-            if (await User.findOne({
-                where: { email },
-            })) {
+            if (await UserSchema.findOne({ email })) {
                 return res.status(400).json({ error: 'E-mail already registered' })
             }
 
             const hash = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-            const user = await User.create({
+
+            const user = await UserSchema.create({
                 name,
                 email,
                 administrator: false,
+                active: false,
                 cpf,
                 password: hash
             });
 
-            return res.json({ user });
+            // TODO Separar em uma função separada
+            // TODO send email with confirmationToken -- função async sem await
+            // const confirmationToken = encryption.encrypt(user._id);
+
+            return res.json(user);
+
         } catch (err) {
-            return res.status(400).json({ error: "User registration failed" });
+            return res.status(400).json({ error: err + " User registration failed" });
+        }
+    },
+
+    async confirmation(req, res) {
+        const { confirmationToken } = req.params;
+
+        try {
+            user_id = encryption.decrypt(confirmationToken);
+
+            const user = await UserSchema.findById(user_id);
+
+            if (!user) {
+                res.status(400).json({ error: "User not found" });
+            }
+
+            user.active = true;
+
+            user.save();
+
+            return res.json(user);
+
+        } catch (err) {
+            return res.status(400).json({ error: "User confirmation failed" });
         }
 
-    },
+    }
 
 }
 

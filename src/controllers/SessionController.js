@@ -48,20 +48,24 @@ module.exports = {
             const user = await UserSchema.create({
                 name,
                 email,
-                administrator: false,
-                active: false,
                 cpf,
-                password: hash
+                profile: "user",
+                active: false,
+                password: hash,
+                password_changed_in: new Date(),
+                psychologists_treatment: [],
+                last_passwords: [],
             });
 
+            // TODO Email de Confirmação
+            // const confirmationToken = encryption.encrypt(user._id);
             // TODO Separar em uma função separada
             // TODO send email with confirmationToken -- função async sem await
-            // const confirmationToken = encryption.encrypt(user._id);
 
             return res.json(user);
 
         } catch (err) {
-            return res.status(400).json({ error: err + " User registration failed" });
+            return res.status(400).json({ error: "User registration failed" });
         }
     },
 

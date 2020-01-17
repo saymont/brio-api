@@ -1,17 +1,21 @@
 const mongoose = require('mongoose');
 
-// const Schema = mongoose.Schema, ObjectId = Schema.ObjectId;
-
 const UserSchema = new mongoose.Schema({
-    administrator: Boolean,
     active: Boolean,
     name: String,
     email: String,
     password: String,
     cpf: String,
+    profile: String,
+    password_changed_in: Date,
+    updated_at: { type: Date, default: Date.now },
+    created_at: { type: Date, default: Date.now },
+    psychologists_treatment: Array,
+    last_passwords: Array,
     psychologist: {
         crp: String,
-        approvedBy: mongoose.Schema.ObjectId
+        approved: Boolean,
+        approved_in: Date,
     }
 })
 

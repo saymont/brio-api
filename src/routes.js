@@ -10,7 +10,8 @@ const DashboardController = require('./controllers/DashboardController');
 
 routes.post('/api/v1/login', SessionController.login);
 routes.post('/api/v1/register', SessionController.registerUser);
-routes.post('/api/v1/:user_id/psychologist', PsychologistController.register); 
+routes.post('/api/v1/:user_id/psychologist', PsychologistController.requestPsychologistRegistration);
+routes.post('/api/v1/:user_id/confirmPsychologist', PsychologistController.confirmPsychologistRegistration);
 
 // Rota apenas para testar o auth
 routes.get('/api/v1/dashboard', authMiddleware, DashboardController.show);

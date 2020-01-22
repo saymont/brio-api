@@ -1,37 +1,22 @@
-const { Model, DataTypes, literal } = require('sequelize');
+const mongoose = require('mongoose');
 
-class User extends Model {
-    static init(sequelize) {
-        super.init({
-            user_id: {
-                type: DataTypes.UUID,
-                unique: true,
-                primaryKey: true,
-                defaultValue: literal('gen_random_uuid()')
-            },
-            administrator: {
-                type: DataTypes.BOOLEAN,
-            },
-            name: {
-                type: DataTypes.STRING,
-            },
-            email: {
-                type: DataTypes.STRING,
-            },
-            password: {
-                type: DataTypes.STRING
-            },
-            cpf: {
-                type: DataTypes.STRING
-            }
-        }, {
-            sequelize
-        })
+const UserSchema = new mongoose.Schema({
+    active: Boolean,
+    name: String,
+    email: String,
+    password: String,
+    cpf: String,
+    profile: String,
+    password_changed_in: Date,
+    updated_at: { type: Date, default: Date.now },
+    created_at: { type: Date, default: Date.now },
+    psychologists_treatment: Array,
+    last_passwords: Array,
+    psychologist: {
+        crp: String,
+        approved: Boolean,
+        approved_in: Date,
     }
+})
 
-    static associate(models) {
-        this.hasOne(models.Psychologist, { as: 'psychologist', foreignKey: 'user_id' })
-    }
-}
-
-module.exports = User;
+module.exports = mongoose.model('User', UserSchema);

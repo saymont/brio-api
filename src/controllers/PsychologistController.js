@@ -1,38 +1,50 @@
-const Psychologist = require('../models/Psychologist');
-const User = require('../models/User');
-
+const UserSchema = require('../models/User');
+const mongoose = require("mongoose");
 
 module.exports = {
-    async register(req, res) {
-        const { user_id } = req.params;
-        const { crp } = req.body;
+    async confirmPsychologistRegistration(req, res) {
+        const { admin_id } = req.params;
+        const { user_id, crp } = req.body;
 
         try {
 
-
-            const user = await User.findByPk(user_id, {
-                include: { association: "psychologist" }
-            });
+            const user = await UserSchema.findById(user_id);
 
             if (!user) {
                 return res.status(400).json({ error: "User not found" });
             }
 
-            if (user.psychologist) {
-                console.log(user)
+            if (user.psychologist.approved == true) {
                 return res.status(400).json({ error: "User is already a psychologist" });
             }
 
-            const psychologist = await Psychologist.create({
-                crp,
-                user_id
-            });
+            user.active = true;
+            user.profile = "psychologist";
 
-            return res.json({ psychologist });
+            user.psychologist.crp = crp;
+            user.psychologist.approved = true;
+            user.psychologist.approved_in = new Date();
+
+            user.save();
+
+            return res.json(user);
 
         } catch (err) {
-            return res.status(400).json({ error: err + "Psychologist registration failed" });
+            return res.status(400).json({ error: admin_id + "Psychologist confirmation failed" });
         }
-
     },
+
+    async requestPsychologistRegistration(req, res) {
+        const { user_id } = req.params;
+        const { crp } = req.body;
+
+        try {
+            // TODO envia email para o Briosense para a confirmação do crp
+            // TODO Envia notificação para os perfis dos administradores -> Socket.io
+            return res.status(400).json({ error: "user_id: " + user_id + " crp: " + crp });
+        } catch (err) {
+            return res.status(400).json({ error: "Psychologist registration failed" });
+        }
+    }
+
 }

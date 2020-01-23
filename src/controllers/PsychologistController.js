@@ -1,4 +1,4 @@
-const UserSchema = require('../models/User');
+const UserSchema = require("../models/User");
 const mongoose = require("mongoose");
 
 module.exports = {
@@ -7,7 +7,6 @@ module.exports = {
         const { user_id, crp } = req.body;
 
         try {
-
             const user = await UserSchema.findById(user_id);
 
             if (!user) {
@@ -15,7 +14,9 @@ module.exports = {
             }
 
             if (user.psychologist.approved == true) {
-                return res.status(400).json({ error: "User is already a psychologist" });
+                return res
+                    .status(400)
+                    .json({ error: "User is already a psychologist" });
             }
 
             user.active = true;
@@ -28,9 +29,10 @@ module.exports = {
             user.save();
 
             return res.json(user);
-
         } catch (err) {
-            return res.status(400).json({ error: admin_id + "Psychologist confirmation failed" });
+            return res
+                .status(400)
+                .json({ error: admin_id + "Psychologist confirmation failed" });
         }
     },
 
@@ -41,10 +43,13 @@ module.exports = {
         try {
             // TODO envia email para o Briosense para a confirmação do crp
             // TODO Envia notificação para os perfis dos administradores -> Socket.io
-            return res.status(400).json({ error: "user_id: " + user_id + " crp: " + crp });
+            return res
+                .status(400)
+                .json({ error: "user_id: " + user_id + " crp: " + crp });
         } catch (err) {
-            return res.status(400).json({ error: "Psychologist registration failed" });
+            return res
+                .status(400)
+                .json({ error: "Psychologist registration failed" });
         }
     }
-
-}
+};

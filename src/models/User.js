@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({
     active: Boolean,
@@ -15,8 +15,8 @@ const UserSchema = new mongoose.Schema({
     psychologist: {
         crp: String,
         approved: Boolean,
-        approved_in: Date,
+        approved_in: Date
     }
-})
+});
 
-module.exports = mongoose.model('User', UserSchema);
+module.exports = mongoose.model("User", UserSchema);

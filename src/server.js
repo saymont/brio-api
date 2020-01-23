@@ -1,16 +1,15 @@
-require('dotenv/config');
+require("dotenv/config");
 const express = require("express");
 
-const routes = require('./routes');
+const routes = require("./routes");
 
-const mongoose = require('mongoose');
-const cors = require('cors');
+const mongoose = require("mongoose");
+const cors = require("cors");
 
 mongoose.connect(process.env.MONGO_DATABASE, {
     useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-
+    useUnifiedTopology: true
+});
 
 // Inicia o app
 const app = express();

@@ -1,46 +1,45 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const UserSchema = require('../models/User');
-const encryption = require('../util/EncryptionCTR');
-
+const UserSchema = require("../models/User");
+const encryption = require("../util/EncryptionCTR");
 
 module.exports = {
     async login(req, res) {
-
         const { email, password } = req.body;
 
         try {
-
             const user = await UserSchema.findOne({ email });
 
             if (!user) {
-                return res.status(400).json({ error: 'User does not exists' })
+                return res.status(400).json({ error: "User does not exists" });
             }
 
-            bcrypt.compare(password, user.password, function (err, response) {
+            bcrypt.compare(password, user.password, function(err, response) {
                 if (response == true) {
                     return res.json({
                         user: user,
                         token: generateToken(user.user_id)
                     });
                 } else {
-                    return res.status(400).json({ error: 'Incorrect password' })
+                    return res
+                        .status(400)
+                        .json({ error: "Incorrect password" });
                 }
             });
-
         } catch (err) {
             return res.status(400).json({ error: "Login failed" });
         }
     },
 
     async registerUser(req, res) {
-
         const { name, email, password, cpf } = req.body;
 
         try {
             if (await UserSchema.findOne({ email })) {
-                return res.status(400).json({ error: 'E-mail already registered' })
+                return res
+                    .status(400)
+                    .json({ error: "E-mail already registered" });
             }
 
             const hash = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
@@ -54,7 +53,7 @@ module.exports = {
                 password: hash,
                 password_changed_in: new Date(),
                 psychologists_treatment: [],
-                last_passwords: [],
+                last_passwords: []
             });
 
             // TODO Email de Confirmação
@@ -63,7 +62,6 @@ module.exports = {
             // TODO send email with confirmationToken -- função async sem await
 
             return res.json(user);
-
         } catch (err) {
             return res.status(400).json({ error: "User registration failed" });
         }
@@ -86,20 +84,14 @@ module.exports = {
             user.save();
 
             return res.json(user);
-
         } catch (err) {
             return res.status(400).json({ error: "User confirmation failed" });
         }
-
     }
-
-}
-
+};
 
 function generateToken(id) {
     return jwt.sign({ id }, "secret", {
         expiresIn: 86400
     });
 }
-
-

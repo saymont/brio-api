@@ -9,21 +9,43 @@ const PostController = require("./controllers/PostController");
 const SessionController = require("./controllers/SessionController");
 const PsychologistController = require("./controllers/PsychologistController");
 const DashboardController = require("./controllers/DashboardController");
+var passport = require("passport");
+var secured = require("./lib/middleware/secured");
 
 routes.get("/api/v1/posts", PostController.getPosts);
 
-routes.post("/api/v1/login", SessionController.login);
-routes.post("/api/v1/register", SessionController.registerUser);
-routes.post(
-    "/api/v1/:user_id/psychologist",
-    PsychologistController.requestPsychologistRegistration
-);
-routes.post(
-    "/api/v1/:user_id/confirmPsychologist",
-    PsychologistController.confirmPsychologistRegistration
+// User
+routes.get("/api/v1/dashboardUser", secured(), DashboardController.user);
+
+// Auth
+routes.get("/", function(req, res, next) {
+    return res.json({ ain: "1" });
+});
+
+routes.get(
+    "/api/v1/login",
+    passport.authenticate("auth0", {
+        scope: "openid email profile"
+    })
 );
 
-// Rota apenas para testar o auth
-routes.get("/api/v1/dashboard", authMiddleware, DashboardController.show);
+routes.get("/api/v1/callback", function(req, res, next) {
+    passport.authenticate("auth0", function(err, user, info) {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            return res.redirect("/api/v1/login");
+        }
+        req.logIn(user, function(err) {
+            if (err) {
+                return next(err);
+            }
+            const returnTo = req.session.returnTo;
+            delete req.session.returnTo;
+            res.redirect(returnTo || "/api/v1/dashboardUser");
+        });
+    })(req, res, next);
+});
 
 module.exports = routes;

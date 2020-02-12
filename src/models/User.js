@@ -1,3 +1,6 @@
+// Model de usuário para o antigo MongoDB
+// TODO levantar os requisitos de usuários e implementar no Auth0
+
 const mongoose = require("mongoose");
 
 const UserSchema = new mongoose.Schema({

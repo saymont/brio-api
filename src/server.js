@@ -9,13 +9,13 @@ const cors = require("cors");
 var Auth0Strategy = require("passport-auth0");
 var passport = require("passport");
 var session = require("express-session");
-var flash = require("connect-flash");
+// var flash = require("connect-flash");
 var cookieParser = require("cookie-parser");
 
-// mongoose.connect(process.env.MONGO_DATABASE, {
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true
-// });
+mongoose.connect(process.env.MONGO_DATABASE, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
 
 // Configure Passport to use Auth0
 var strategy = new Auth0Strategy(
@@ -70,16 +70,13 @@ if (app.get("env") === "production") {
     sess.cookie.secure = true; // serve secure cookies, requires https
 }
 
-const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
 
 app.use(session(sess));
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(flash());
+//app.use(flash());
 
 // Rotas
 app.use(cors());

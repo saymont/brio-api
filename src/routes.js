@@ -11,6 +11,10 @@ const PsychologistController = require("./controllers/PsychologistController");
 const DashboardController = require("./controllers/DashboardController");
 var passport = require("passport");
 var secured = require("./lib/middleware/secured");
+var url = require('url');
+var util = require('util');
+var querystring = require('querystring');
+
 
 routes.get("/api/v1/posts", PostController.getPosts);
 
@@ -46,6 +50,27 @@ routes.get("/api/v1/callback", function(req, res, next) {
             res.redirect(returnTo || "/api/v1/dashboardUser");
         });
     })(req, res, next);
+});
+
+// Perform session logout
+routes.get("/api/v1/logout", (req, res) => {
+    req.logout();
+    var returnTo = req.protocol + "://" + req.hostname;
+    var port = req.connection.localPort;
+    if (port !== undefined && port !== 80 && port !== 443) {
+        returnTo += ":" + port;
+    }
+
+    var logoutURL = new url.URL(
+        util.format("https://%s/v2/logout", process.env.AUTH0_DOMAIN)
+    );
+    var searchString = querystring.stringify({
+        client_id: process.env.AUTH0_CLIENT_ID,
+        returnTo: returnTo
+    });
+    logoutURL.search = searchString;
+
+    res.redirect(logoutURL);
 });
 
 module.exports = routes;

@@ -1,3 +1,5 @@
+// Caso um dia seja necessário enviar email
+
 require('dotenv/config');
 
 const AWS = require("aws-sdk");

@@ -1,29 +1,25 @@
 const express = require("express");
-
-const authMiddleware = require("./middlewares/auth");
-
 const routes = express.Router();
-
-const PostController = require("./controllers/PostController");
-
-const SessionController = require("./controllers/SessionController");
-const PsychologistController = require("./controllers/PsychologistController");
-const DashboardController = require("./controllers/DashboardController");
 var passport = require("passport");
 var secured = require("./lib/middleware/secured");
 var url = require('url');
 var util = require('util');
 var querystring = require('querystring');
 
+const PostController = require("./controllers/PostController");
+const DashboardController = require("./controllers/DashboardController");
 
-routes.get("/api/v1/posts", PostController.getPosts);
 
 // User
 routes.get("/api/v1/dashboardUser", secured(), DashboardController.user);
 
+// Blog
+routes.get("/api/v1/posts", PostController.getPosts);
+
+
 // Auth
-routes.get("/", function(req, res, next) {
-    return res.json({ ain: "1" });
+routes.get("/", function (req, res, next) {
+    return res.json({ OK: "1" });
 });
 
 routes.get(
@@ -33,15 +29,15 @@ routes.get(
     })
 );
 
-routes.get("/api/v1/callback", function(req, res, next) {
-    passport.authenticate("auth0", function(err, user, info) {
+routes.get("/api/v1/callback", function (req, res, next) {
+    passport.authenticate("auth0", function (err, user, info) {
         if (err) {
             return next(err);
         }
         if (!user) {
             return res.redirect("/api/v1/login");
         }
-        req.logIn(user, function(err) {
+        req.logIn(user, function (err) {
             if (err) {
                 return next(err);
             }
@@ -72,5 +68,6 @@ routes.get("/api/v1/logout", (req, res) => {
 
     res.redirect(logoutURL);
 });
+
 
 module.exports = routes;

@@ -9,7 +9,6 @@ const cors = require("cors");
 var Auth0Strategy = require("passport-auth0");
 var passport = require("passport");
 var session = require("express-session");
-// var flash = require("connect-flash");
 var cookieParser = require("cookie-parser");
 
 mongoose.connect(process.env.MONGO_DATABASE, {
@@ -23,9 +22,9 @@ var strategy = new Auth0Strategy(
         domain: process.env.AUTH0_DOMAIN,
         clientID: process.env.AUTH0_CLIENT_ID,
         clientSecret: process.env.AUTH0_CLIENT_SECRET,
-        callbackURL: "http://localhost:3333/api/v1/callback"
+        callbackURL: process.env.AUTH0_CALLBACK
     },
-    function(accessToken, refreshToken, extraParams, profile, done) {
+    function (accessToken, refreshToken, extraParams, profile, done) {
         // accessToken is the token to call Auth0 API (not needed in the most cases)
         // extraParams.id_token has the JSON Web Token
         // profile has all the information from the user
@@ -36,11 +35,11 @@ var strategy = new Auth0Strategy(
 passport.use(strategy);
 
 // You can use this section to keep a smaller payload
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
     done(null, user);
 });
 
-passport.deserializeUser(function(user, done) {
+passport.deserializeUser(function (user, done) {
     done(null, user);
 });
 
@@ -51,7 +50,7 @@ app.use(cookieParser());
 
 // config express-session
 var sess = {
-    secret: "123",
+    secret: process.env.AUTH0_SESSION_SECRET,
     cookie: {},
     resave: false,
     saveUninitialized: true

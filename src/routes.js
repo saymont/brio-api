@@ -1,3 +1,4 @@
+require("dotenv/config");
 const express = require("express");
 const routes = express.Router();
 var passport = require("passport");
@@ -5,6 +6,8 @@ var secured = require("./lib/middleware/secured");
 var url = require('url');
 var util = require('util');
 var querystring = require('querystring');
+const jwt = require("express-jwt");
+const jwksRsa = require("jwks-rsa");
 
 const PostController = require("./controllers/PostController");
 const DashboardController = require("./controllers/DashboardController");
@@ -69,5 +72,31 @@ routes.get("/api/v1/logout", (req, res) => {
     res.redirect(logoutURL);
 });
 
+// Set up Auth0 configuration
+const authConfig = {
+    domain: process.env.AUTH0_DOMAIN,
+    audience: process.env.AUTH0_AUDIENCE
+  };
+
+// checkJwt
+const checkJwt = jwt({
+    secret: jwksRsa.expressJwtSecret({
+      cache: true,
+      rateLimit: true,
+      jwksRequestsPerMinute: 5,
+      jwksUri: `https://${authConfig.domain}/.well-known/jwks.json`
+    }),
+  
+    audience: authConfig.audience,
+    issuer: `https://${authConfig.domain}/`,
+    algorithm: ["RS256"]
+  });
+
+// Define an endpoint that must be called with an access token
+routes.get("/api/external", checkJwt, (req, res) => {
+    res.send({
+      msg: "Your Access Token was successfully validated!"
+    });
+  });
 
 module.exports = routes;

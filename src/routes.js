@@ -1,11 +1,7 @@
 require("dotenv/config");
 const express = require("express");
 const routes = express.Router();
-var passport = require("passport");
 var secured = require("./lib/middleware/secured");
-var url = require('url');
-var util = require('util');
-var querystring = require('querystring');
 
 const PostController = require("./controllers/PostController");
 const DashboardController = require("./controllers/DashboardController");
